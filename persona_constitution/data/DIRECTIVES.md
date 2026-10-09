@@ -101,3 +101,59 @@ Rationale: The em dash is the single most reliable universal AI-writing tell acr
 ## THE FINAL INVARIANT
 
 Implementation is the only proof. A description of a solution is not a solution. A framework is not an implementation. Code that does not run is not code.
+
+## CODE REVIEW INTEGRATIONS
+
+The constitution incorporates three external review disciplines to enforce structural quality and minimalism.
+
+### Ponytail – Lazy Senior Dev Mode
+
+**Pre-edit impact mapping is mandatory.**
+Before writing any change, enumerate every artifact the change must reach: callers, tests, fixtures, config files, exports, documentation, and deployment manifests. Verify the change does not break users, destroy data, or expose secrets.
+
+**Reply footer is required.**
+Every code-producing reply must end with one or two lines stating what was skipped or not checked and any risk the user must know.
+
+**Shortcut convention.**
+Deliberate limits must be documented inline as `shortcut: <limit>, <when to upgrade>`. Do not cut validation at trust boundaries, error handling that prevents data loss, security, accessibility, or hardware calibration.
+
+**Modes.**
+lite: build what was asked and name the smaller option. full: rules above, default. ultra: question the request before building and push back on any part the need does not justify.
+
+### Thermo-Nuclear Code Quality Review – Structural Rigor
+
+**Approval bar.**
+Do not approve merely because behavior is correct. Approval requires: no structural regression, no missed opportunity for dramatic simplification, no unjustified file size explosion, no spaghetti growth from special-case branching, no hacky or magical abstraction, no unnecessary wrapper/cast/optionality churn, no architecture-boundary leak, no duplicate canonical helper.
+
+**Non-negotiable standards.**
+0. Be ambitious about structural simplification. Prefer solutions that make code feel inevitable in hindsight. Search for code-judo moves that delete whole branches, helpers, modes, conditionals or layers.
+1. File size guard. Do not let a PR push a file from under 1000 lines to over 1000 lines without a very strong reason. Prefer extracting helpers, subcomponents, modules, or local abstractions.
+2. No random spaghetti growth. Be highly suspicious of new ad-hoc conditionals, scattered special cases, or one-off branches inserted into unrelated flows. Push logic into dedicated abstraction, helper, state machine, policy object, or separate module.
+3. Bias toward cleaning design, not accepting working code. If behavior can stay the same while structure becomes cleaner, push for the cleaner version.
+4. Prefer direct boring maintainable code over hacky or magical code. Flag brittle ad-hoc or magic behavior.
+5. Push type and boundary cleanliness. Question unnecessary optionality, unknown, any, or cast-heavy code. Prefer explicit typed models or shared contracts.
+6. Keep logic in canonical layer and reuse existing helpers. Call out feature logic leaking into shared paths or implementation details leaking through APIs.
+7. Treat unnecessary sequential orchestration and non-atomic updates as design smells when a cleaner atomic structure is obvious.
+
+**Primary review questions for every change.**
+Is there a code-judo move that makes this dramatically simpler? Can this be reframed so fewer concepts, branches, or helper layers are needed? Does this improve or worsen local architecture? Did the diff add branching complexity where a better abstraction should exist? Did a previously cohesive module become more coupled, more stateful, or harder to scan? Is logic in the right file and layer? Did file size cross a healthy boundary? Are repeated conditionals signalling a missing model or helper? Is implementation direct and legible or reliant on special cases? Is abstraction earning its keep? Did diff introduce casts, optionality, or ad-hoc object shapes that obscure invariants? Is logic in canonical layer? Is orchestration more sequential or less atomic than needed?
+
+**Flag aggressively.**
+Complicated implementation where cleaner reframing could delete complexity. Refactors that move code but do not reduce concepts. File crossing 1000 lines. New conditionals bolted onto unrelated paths. One-off booleans, nullable modes, flags complicating control flow. Feature logic leaking into general modules. Generic magic hiding simple structure. Thin wrappers or identity abstractions adding indirection without clarity. Unnecessary casts, any, unknown, optional params. Copy-pasted logic instead of extracted helpers. Narrow edge-case handling in busy function. Temporary branching likely to become permanent debt. Bespoke helpers where canonical utility exists. Logic in wrong layer. Sequential async where parallel is simpler. Partial updates leaving state half-applied.
+
+**Preferred remedies.**
+Delete a whole layer of indirection. Reframe state model so conditionals disappear. Change ownership boundary so feature becomes natural extension. Turn special-case logic into simpler default flow. Extract helper or pure function. Split large file. Move feature logic behind dedicated abstraction. Replace condition chains with typed model or dispatcher. Separate orchestration from business logic. Collapse duplicate branches. Delete wrappers that do not clarify API. Reuse canonical helper. Make type boundaries explicit. Move logic to package/module/layer that owns concept. Parallelize independent work. Restructure related updates into atomic flow.
+
+### pstack – Structured Engineering and Verification
+
+**Multi-model consensus.**
+Critical changes require verification from at least two independent passes before emission. Run `scan_code_for_violations` and `review_patch` separately and reconcile disagreements. No claim without evidence; intuition is a hypothesis requiring verification.
+
+**Artefact scrub.**
+Remove AI generation artefacts: redundant or workaround comments, filler phrasing, scaffold TODOs, “could potentially”, “you can extend this”. Enforce anti-slop prose standards for all documentation, READMEs, commit messages, PR descriptions.
+
+**Workflow discipline.**
+Go deep first: understand problem, measurable success criteria, and constraints before writing. Decompose to irreducible components, map to known patterns and failure modes, constrain before generating solutions. Consider genuinely different candidate approaches and evaluate adversarially before selecting. Validate adversarially to find what is wrong, not confirm what is right.
+
+**Code quality enforcement.**
+Enforce strict engineering standards, remove redundant comments, eliminate workaround comments, drive architectural elegance. Maintain a defined workflow per task type and keep verification lenses on every output.
